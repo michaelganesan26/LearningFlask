@@ -1,5 +1,6 @@
 from flask import Flask, Response, make_response, redirect, render_template
 from datetime import datetime
+from collections import namedtuple
 
 app = Flask(__name__)
 
@@ -42,5 +43,7 @@ def gotoyoutube():
 
 @app.route('/testtemplate/<name>')
 def testname(name: str):
+    mytuple = namedtuple("data",(["username","mydatetime"]))
     currentTime = datetime.now().strftime("%I:%M:%S %p %m/%d/%Y")
-    return render_template("greeting.html", name=name,currenttime=currentTime)
+    arg = mytuple(username=name,mydatetime=currentTime)
+    return render_template("greeting.html", arg=arg)

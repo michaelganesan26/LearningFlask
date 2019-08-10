@@ -1,6 +1,8 @@
 from flask import Flask, Response, make_response, redirect, render_template
 from datetime import datetime
+from src.testdata.cars import cars
 from collections import namedtuple
+
 
 app = Flask(__name__)
 
@@ -40,10 +42,17 @@ def return_message():
 def gotoyoutube():
     return redirect("http://youtube.com")
 
+def getCurrentTime():
+    result = datetime.now().strftime("%I:%M:%S %p")
+    return(result)
 
+    
 @app.route('/testtemplate/<name>')
 def testname(name: str):
-    mytuple = namedtuple("data",(["username","mydatetime"]))
+    data = cars()
+    for x in data:
+        print(x["name"])
+    mytuple = namedtuple("data",(["username","mydatetime","getmytime","cars"]))
     currentTime = datetime.now().strftime("%I:%M:%S %p %m/%d/%Y")
-    arg = mytuple(username=name,mydatetime=currentTime)
+    arg = mytuple(username=name,mydatetime=currentTime,getmytime=getCurrentTime,cars=data)
     return render_template("greeting.html", arg=arg)

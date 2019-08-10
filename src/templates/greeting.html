@@ -1,2 +1,11 @@
 <h3>Welcome {{arg.name}} to coding in Flask, 
     wow this is way too cool, the time is: {{arg.mydatetime}}</h3>
+<h4>You are calling a method for the time {{arg.getmytime()}}</h4>
+<div>
+    <p>This is a list of cars</p>
+    <ul>
+      {% for x in arg.cars %}
+        <li>{{x["id"]}}</li>
+      {% endfor %}
+    </ul>
+</div>

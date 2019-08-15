@@ -1,4 +1,5 @@
-from flask import Flask, Response, make_response, redirect, render_template,abort
+from flask import Flask, Response, make_response, \
+ redirect, render_template,abort, request
 from datetime import datetime
 from src.testdata.cars import cars
 from collections import namedtuple
@@ -31,7 +32,7 @@ def create_error():
 
 
 #Creating a cookie
-@app.route('/data')
+@app.route('/testcookie')
 def return_message():
     response = make_response(
         "<h3>I am going to set the cookie for the session</h3>", 200)
@@ -74,6 +75,22 @@ def displayuserpage(name: str):
 def simulate_error(error):
     error = int(error,10)
     abort(error)
+
+
+@app.route('/testpage/<name>')
+def testpage(name:str):
+    return render_template("testpage.html",name=name)
+
+
+@app.route('/data/<name>')
+def datapage(name:str):
+    print("You just called the datapage!!")
+    d1 = namedtuple("data",["name","version"])
+    arg = d1(name=name,version=request.args.get("version"))
+    return render_template("datapage.html",arg=arg)
+    
+
+
 
 
 # error handling

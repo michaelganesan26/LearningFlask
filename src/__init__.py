@@ -1,10 +1,12 @@
-from flask import Flask, Response, make_response, redirect, render_template
+from flask import Flask, Response, make_response, redirect, render_template,abort
 from datetime import datetime
 from src.testdata.cars import cars
 from collections import namedtuple
-
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
+
+bootstrap = Bootstrap(app)
 
 
 @app.route('/index')
@@ -42,17 +44,44 @@ def return_message():
 def gotoyoutube():
     return redirect("http://youtube.com")
 
+
 def getCurrentTime():
     result = datetime.now().strftime("%I:%M:%S %p")
-    return(result)
+    return (result)
 
-    
+
 @app.route('/testtemplate/<name>')
 def testname(name: str):
     data = cars()
     for x in data:
         print(x["name"])
-    mytuple = namedtuple("data",(["username","mydatetime","getmytime","cars"]))
+    mytuple = namedtuple("data",
+                         (["username", "mydatetime", "getmytime", "cars"]))
     currentTime = datetime.now().strftime("%I:%M:%S %p %m/%d/%Y")
-    arg = mytuple(username=name,mydatetime=currentTime,getmytime=getCurrentTime,cars=data)
+    arg = mytuple(username=name,
+                  mydatetime=currentTime,
+                  getmytime=getCurrentTime,
+                  cars=data)
     return render_template("greeting.html", arg=arg)
+
+
+@app.route('/user/<name>')
+def displayuserpage(name: str):
+    return render_template("user.html", name=name)
+
+
+@app.route('/generror/<error>')
+def simulate_error(error):
+    error = int(error,10)
+    abort(error)
+
+
+# error handling
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("500.html"), 500
